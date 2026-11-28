@@ -580,6 +580,7 @@ html { scroll-padding-top: 7rem; }
   .settle > :nth-child(3) { --settle-order: 2; }
   .settle > :nth-child(4) { --settle-order: 3; }
   .settle > :nth-child(5) { --settle-order: 4; }
+  .settle > :nth-child(n+6) { --settle-order: 5; }
   .rule-draw { transform-origin: center; animation: rule-draw 900ms cubic-bezier(.2,.7,.2,1) both; }
   .photo-plate[data-zoom] img { transition: transform 1200ms cubic-bezier(.2,.7,.2,1); }
   a:hover .photo-plate[data-zoom] img, .photo-plate[data-zoom]:hover img { transform: scale(1.025); }
@@ -703,4 +704,35 @@ nav[data-spy-ready] a[aria-current="location"] { color: var(--fg); }
 @media (prefers-reduced-motion: no-preference) {
   [data-spy-track]::before { transition: transform 280ms cubic-bezier(.2,.7,.2,1), width 280ms cubic-bezier(.2,.7,.2,1), height 280ms cubic-bezier(.2,.7,.2,1), opacity 200ms ease; }
   nav[data-spy-ready] a { transition: color 160ms ease; }
+}
+
+/* ---------------------------------------------------------------------------------------------------------
+   Firm pages: covers and call bands. Seam grounds a cover or a closing band on the firm pages (home,
+   Intelligence, Advisory, About) and never a data workspace. Inside `.on-seam`, use `.seam-quiet` for
+   secondary text; `text-muted` and `text-faint` fail contrast on this ground.
+   --------------------------------------------------------------------------------------------------------- */
+.on-seam { background: var(--seam); color: var(--bg); }
+.on-seam .kicker { color: var(--malachite-light); }
+.on-seam .standfirst, .on-seam .seam-quiet { color: var(--on-malachite); }
+.on-seam :where(a, button, summary):focus-visible { outline-color: var(--malachite-light); }
+.on-seam ::selection { background: color-mix(in oklab, var(--malachite-light) 38%, transparent); }
+.on-seam .link-quiet { text-decoration-color: color-mix(in oklab, var(--malachite-light) 55%, transparent); }
+.on-seam .link-quiet:hover { color: var(--malachite-light); text-decoration-color: var(--malachite-light); }
+.on-seam .research-button { background: var(--bg); color: var(--seam); }
+.on-seam .research-button:hover { background: var(--malachite-light); color: var(--seam); }
+.on-seam .research-button-secondary { border-color: var(--bg); color: var(--bg); }
+.on-seam .research-button-secondary:hover { background: var(--bg); color: var(--seam); }
+.seam-rule { border-top: 1px solid color-mix(in oklab, var(--malachite-light) 32%, var(--seam)); }
+
+/* Cover headline: the firm pages' largest type, left-aligned as on the research covers. */
+.cover-title { font-family: var(--font-editorial); font-weight: 400; font-size: clamp(2.375rem, 5.6vw, 4.75rem); line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance; }
+.firm-head .kicker { color: var(--accent); }
+
+/* One oversized figure per panel; companions use `.article-figure`. */
+.figure-xxl { font-family: var(--font-editorial); font-weight: 400; font-size: clamp(3rem, 8vw, 5.75rem); line-height: .95; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; color: var(--accent); }
+.on-seam .figure-xxl, .on-seam .article-figure { color: var(--malachite-light); }
+
+@media print {
+  .on-seam { background: none; color: var(--fg); }
+  .on-seam .kicker, .on-seam .standfirst, .on-seam .seam-quiet, .on-seam .figure-xxl, .on-seam .article-figure { color: var(--fg); }
 }

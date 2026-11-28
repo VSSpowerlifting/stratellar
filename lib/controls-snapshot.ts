@@ -103,6 +103,7 @@ function buildSnapshot() {
   };
 }
 
+/** Live builder. Pages that describe the download read `buildPublishedControlsSnapshotBundle` (the pinned release). */
 export function buildControlsSnapshotBundle() {
   const files = Object.entries(buildSnapshot()).map(([name, rows]) => ({
     name, rows: rows.length, content: json(rows),

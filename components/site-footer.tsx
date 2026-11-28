@@ -2,20 +2,25 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Wordmark } from "@/components/ui/brand";
 import { site } from "@/lib/site";
-import { formatDateLong } from "@/lib/format";
+import { formatDateLongUS } from "@/lib/format";
 
 const footerColumns = [
   {
-    label: "Research",
+    label: "Stratellar",
     links: [
-      { href: "/research", label: "Library" },
-      { href: "/markets", label: "Market Monitor" },
+      { href: "/intelligence", label: "Intelligence" },
+      { href: "/research", label: "Research" },
+      { href: "/advisory", label: "Advisory" },
+      { href: "/about", label: "About" },
+      { href: "/contact", label: "Contact" },
     ],
   },
   {
     label: "Explore",
     links: [
+      { href: "/explore", label: "All records" },
       { href: "/events", label: "Policy actions" },
+      { href: "/controls", label: "Controls" },
       { href: "/capital", label: "Financing" },
       { href: "/projects", label: "Industrial projects" },
       { href: "/materials", label: "Materials" },
@@ -28,13 +33,13 @@ const footerColumns = [
       { href: "/methodology", label: "Methodology" },
       { href: "/sources", label: "Sources" },
       { href: "/coverage", label: "Coverage" },
-      { href: "/data", label: "Downloads" },
+      { href: "/data", label: "Data and API" },
     ],
   },
   {
-    label: "About",
+    label: "Tools",
     links: [
-      { href: "/about", label: "About" },
+      { href: "/markets", label: "Markets" },
       { href: "/search", label: "Search" },
       { href: "/saved", label: "Saved" },
     ],
@@ -50,18 +55,18 @@ export function SiteFooter() {
             <Wordmark markClassName="h-9" descriptor />
             <p className="mt-5 max-w-xs font-editorial text-lg leading-7 text-foreground">{site.tagline}</p>
             <p className="mt-3 max-w-xs font-display text-sm leading-6 text-muted">
-              Research by{" "}
-              <Link href="/about" className="link-quiet text-foreground">Benjamin Yang</Link>
+              {site.legalName}. Founded and led by{" "}
+              <Link href="/about" className="link-quiet text-foreground">{site.founder}</Link>.
             </p>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
             {footerColumns.map((column) => (
               <div key={column.label}>
                 <p className="font-display text-xs text-faint">{column.label}</p>
-                <ul className="mt-3 space-y-2.5 font-display text-sm">
+                <ul className="mt-3 font-display text-sm md:space-y-2.5">
                   {column.links.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href} className="text-foreground hover:text-accent">
+                      <Link href={item.href} className="inline-flex min-h-11 items-center text-foreground hover:text-accent md:min-h-0">
                         {item.label}
                       </Link>
                     </li>
@@ -72,8 +77,11 @@ export function SiteFooter() {
           </nav>
         </div>
         <div className="mt-14 flex flex-col justify-between gap-2 border-t border-border pt-5 font-display text-xs leading-5 text-faint sm:flex-row">
-          <p>Last revised <time dateTime={site.revisedOn}>{formatDateLong(site.revisedOn)}</time>. Coverage is selective.</p>
-          <p>For research use; consult official sources and qualified advisers for legal decisions.</p>
+          <p>
+            © {site.revisedOn.slice(0, 4)} {site.legalName}. Last revised <time dateTime={site.revisedOn}>{formatDateLongUS(site.revisedOn)}</time>.{" "}
+            <Link href="/coverage" className="link-quiet">Coverage is selective</Link>.
+          </p>
+          <p className="max-w-xl sm:text-right">{site.boundary}</p>
         </div>
       </Container>
     </footer>

@@ -1,4 +1,4 @@
-import { MARK, MARK_SMALL, type MarkGeometry } from "@/lib/brand-mark";
+import { MARK, MARK_SMALL, markerBed, type MarkGeometry } from "@/lib/brand-mark";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -75,5 +75,39 @@ export function Wordmark({
         ) : null}
       </span>
     </span>
+  );
+}
+
+/** The cover band: the mark's construction drawn wide, with one marker bed and one fault. */
+const BAND: MarkGeometry = markerBed({
+  width: 1440,
+  beds: [26, 9, 34, 18],
+  marker: 1,
+  gap: 7,
+  throw: 22,
+  fault: 12,
+  slant: 30,
+  faultAt: 0.68,
+});
+
+/**
+ * A strata band for the edge of a cover panel. It is decoration: it runs along an edge, never behind text, and
+ * carries exactly one marker bed and one fault. `ground` picks the bed tones for the surface it sits on.
+ */
+export function StrataBand({ ground = "seam", className }: { ground?: "seam" | "plaster"; className?: string }) {
+  const bed = ground === "seam" ? "text-seam-bed" : "text-malachite-tint";
+  const marker = ground === "seam" ? "text-malachite-light" : "text-accent";
+  return (
+    <svg
+      viewBox={`0 0 ${BAND.width} ${BAND.height}`}
+      preserveAspectRatio="none"
+      aria-hidden
+      focusable="false"
+      className={cn("block h-16 w-full select-none sm:h-24", bed, className)}
+    >
+      {BAND.shapes.map((shape) => (
+        <path key={shape.d} d={shape.d} fill="currentColor" className={shape.role === "marker" ? marker : undefined} />
+      ))}
+    </svg>
   );
 }

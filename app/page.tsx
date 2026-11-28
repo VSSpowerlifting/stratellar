@@ -1,29 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { getAllMaterials } from "@/lib/data";
+import { getAllMaterials, getDatasetSummary } from "@/lib/data";
 import { CapitalFlowExhibit } from "@/components/exhibits/capital-flow";
+import { ResearchCover } from "@/components/editorial/research-cover";
 import { FeaturedCase } from "@/components/home/featured-case";
 import { HomeMarketPreview } from "@/components/home/home-market-preview";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { formatDateLong } from "@/lib/format";
+import { formatDateLongUS } from "@/lib/format";
 import { getFinancingCase, getLegalControlCase, getTungstenCase } from "@/lib/homepage-cases";
 import { journeys, site } from "@/lib/site";
-import { datasetJsonLd, jsonLdScript } from "@/lib/structured-data";
+import { datasetJsonLd, jsonLdScript, websiteJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   // `absolute`: the root layout's title template does not reach the page of its own segment.
   title: { absolute: `${site.name}: ${site.descriptor}` },
   description:
-    "Original research and source-linked data on export controls, public financing and industrial projects in strategic-material supply chains.",
+    "Stratellar documents export controls, public financing, and industrial projects in strategic materials, with licensed data, published research, and scoped advisory work.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: site.url,
     siteName: site.name,
     title: `${site.name}: ${site.descriptor}`,
-    description:
-      "Research on strategic-materials policy, financing and industrial development.",
+    description: "Strategic materials, traced to the source.",
   },
 };
 
@@ -55,21 +55,52 @@ const featured = [
   },
 ] as const;
 
+/**
+ * The three capabilities, each with the same anatomy: what it is, what an organization can engage it for, and
+ * where to go. Record counts are computed at build; no clients, prices, or license terms belong here.
+ */
+const capabilities = [
+  {
+    href: "/intelligence",
+    name: "Intelligence",
+    lead: "Clause-level records of who restricts what, who funds what, and what is being built.",
+    engage:
+      "License Controls, the dataset of export, import, investment, and production restrictions, for use inside a product or service under a written agreement. It arrives as a versioned snapshot with checksums, a data dictionary, and record IDs that join its four files. The public data is free under CC BY 4.0.",
+    action: "Records and licensing",
+  },
+  {
+    href: "/research",
+    name: "Research",
+    lead: "Published studies that test one decision against the documents.",
+    engage:
+      "Recent studies examine BHP’s $5.4–6.3 billion concentrator replacement at Escondida, the £71 million financing behind Tungsten West’s Hemerdon restart, and China’s suspension of six export-control announcements. Every study is free to read, with its sources and method.",
+    action: "Research library",
+  },
+  {
+    href: "/advisory",
+    name: "Advisory",
+    lead: "Founder-led research on one question your organization needs answered.",
+    engage:
+      "A brief might concern regulatory exposure in a supply chain, the public programs that could finance a project, a competitor’s financing, or the effect of a supply disruption. Each engagement is scoped individually.",
+    action: "How engagements work",
+  },
+] as const;
+
 /** One concrete line per record journey: what a reader finds there, in the record's own terms. */
 const journeyNotes: Record<(typeof journeys)[number]["href"], string> = {
-  "/events": "Export controls, laws, funding decisions and official statements, with legal status by date.",
-  "/capital": "Grants, loans, equity and guarantees, each dated from announcement through contract to disbursement.",
-  "/projects": "Mines, refineries and plants, with their financing and reported milestones.",
-  "/compare": "Governments side by side by instrument, material and supply-chain stage.",
-  "/sources": "The source register, methodology, coverage limits and downloadable data.",
+  "/events": "Export controls, laws, funding decisions, and official statements, with legal status by date.",
+  "/capital": "Grants, loans, equity, and guarantees, each dated from announcement through contract to disbursement.",
+  "/projects": "Mines, refineries, and plants, with their financing and reported milestones.",
+  "/compare": "Governments side by side by instrument, material, and supply-chain stage.",
+  "/sources": "The source register, methodology, coverage limits, and downloadable data.",
 };
 
-/** The four analytical layers from the Applied Strategy standard, in the order the analysis tests them. */
-const layers = [
-  ["Government policy", "What a law, regulation or funding decision requires, and from when."],
-  ["Capital allocation", "Who commits money, through which instrument, and when it becomes available."],
-  ["Industrial execution", "Permits, construction and output, separating operator reports from verification."],
-  ["Commercial implications", "What the facts mean for a specific decision, with assumptions labelled."],
+/** The analytical framework, in the order each study and record follows it. */
+const framework = [
+  ["Policy", "What a measure requires, and from which date."],
+  ["Capital", "Who commits money, through which instrument."],
+  ["Industrial execution", "Permits, construction, and output."],
+  ["Commercial outcomes", "What changed for supply, cost, and access, with anticipated implications kept apart from observed results."],
 ] as const;
 
 export default function Home() {
@@ -77,6 +108,7 @@ export default function Home() {
   const legal = getLegalControlCase();
   const financing = getFinancingCase();
   const tungsten = getTungstenCase();
+  const summary = getDatasetSummary();
 
   return (
     <div data-flush-footer>
@@ -84,31 +116,72 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScript(datasetJsonLd()) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(websiteJsonLd()) }}
+      />
 
-      {/* Title block: what the site is and who writes it. The opening plate below belongs to the flagship. */}
+      {/* Title block, centered on the light sheet. The opening photograph below belongs to the flagship. */}
       <Container width="wide" className="pb-12 pt-14 sm:pb-16 sm:pt-20 lg:pt-24">
-        <div className="title-block settle max-w-5xl">
-          <h1 className="display-1 max-w-[15em] text-foreground">
-            Research on critical-minerals policy, public finance and industrial projects
+        <div className="title-block settle mx-auto max-w-5xl">
+          <p className="kicker">{site.descriptor}</p>
+          <h1 className="display-1 mx-auto mt-5 max-w-[14em] text-foreground">
+            Strategic materials, traced to the source.
           </h1>
-          <p className="standfirst mt-7 max-w-2xl">
-            Original analysis built on a source-linked database of export controls, government financing and
-            project milestones, from the official document to its current status.
+          <p className="standfirst mx-auto mt-7 max-w-2xl">
+            Stratellar documents how export controls, public financing, and industrial projects change the supply
+            of critical minerals, and links every record to the document it came from.
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl font-display text-base font-medium text-foreground">
+            License the data, read the research, or commission a study.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link href="/research" className="research-button">Read research</Link>
             <Link href="/explore" className="research-button-secondary">Explore the data</Link>
           </div>
-          <p className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-1 font-display text-sm text-muted">
+          <p className="mt-5 flex flex-wrap justify-center gap-x-6 font-display text-sm">
+            <Link href="/intelligence#licensing" className="link-quiet inline-flex min-h-11 items-center text-muted">
+              License the Controls dataset
+            </Link>
+            <Link href="/advisory" className="link-quiet inline-flex min-h-11 items-center text-muted">
+              Commission a study
+            </Link>
+          </p>
+          <p className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 font-display text-sm text-muted">
             <span>
-              By <Link href="/about" className="link-quiet text-foreground">Benjamin Yang</Link>
+              Founded and led by <Link href="/about" className="link-quiet text-foreground">{site.founder}</Link>
             </span>
             <span>
-              Last revised <time dateTime={site.revisedOn}>{formatDateLong(site.revisedOn)}</time>
+              Last revised <time dateTime={site.revisedOn}>{formatDateLongUS(site.revisedOn)}</time>
             </span>
           </p>
         </div>
       </Container>
+
+      {/* The three capabilities: what each is and what an organization can engage it for. */}
+      <section aria-labelledby="capabilities-heading" className="bg-card">
+        <Container width="wide" className="py-14 sm:py-20">
+          <h2 id="capabilities-heading" className="display-2 mx-auto max-w-[18em] text-center text-foreground">What you can engage Stratellar for</h2>
+          <ul className="m-0 mt-10 grid list-none gap-x-12 gap-y-12 p-0 md:grid-cols-3">
+            {capabilities.map((c) => (
+              <li key={c.href} className="flex min-w-0 flex-col border-t border-border-strong pt-5">
+                <h3 className="display-3 text-foreground">{c.name}</h3>
+                <p className="mt-3 font-editorial text-[1.3125rem] leading-[1.3] text-foreground">{c.lead}</p>
+                {c.href === "/intelligence" ? (
+                  <p className="tnum mt-3 font-display text-sm leading-6 text-accent">
+                    {summary.controlMeasures} control clauses · {summary.events} policy actions ·{" "}
+                    {summary.financialCommitments} financial commitments · {summary.projects} projects
+                  </p>
+                ) : null}
+                <p className="mt-3 font-display text-[0.9375rem] leading-7 text-muted">{c.engage}</p>
+                <p className="mt-auto pt-3 font-display text-sm">
+                  <Link href={c.href} className="inline-flex min-h-11 items-center text-accent underline underline-offset-4">{c.action}</Link>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
 
       <FeaturedCase />
 
@@ -130,12 +203,13 @@ export default function Home() {
                   style={{ "--reveal-order": i } as React.CSSProperties}
                   className="flex min-w-0 flex-col border-t border-border-strong pt-4"
                 >
+                  <ResearchCover data-cover={item.href.split("/").pop()!} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 100vw" className="mb-4" />
                   <p className="label">{item.category}</p>
                   <h3 className="mt-3 font-editorial text-[1.3125rem] leading-[1.22] text-balance text-foreground">
                     <Link href={item.href} className="hover:text-accent">{item.title}</Link>
                   </h3>
                   <p className="mt-auto pt-4 font-display text-xs text-faint">
-                    <time dateTime={item.date}>{formatDateLong(item.date)}</time>
+                    <time dateTime={item.date}>{formatDateLongUS(item.date)}</time>
                   </p>
                 </li>
               ))}
@@ -164,7 +238,7 @@ export default function Home() {
           <div className="title-block max-w-2xl">
             <h2 id="tools-heading" className="display-2 text-foreground">Explore</h2>
             <p className="mt-4 font-display text-[0.9375rem] leading-7 text-muted">
-              Policy actions, financing and industrial projects each link to the official document they come from. Amounts stay in their original currency.
+              Every record links to the document it comes from. Amounts stay in their original currency.
             </p>
           </div>
 
@@ -221,7 +295,7 @@ export default function Home() {
                   <ul className="mt-3 flex list-none flex-wrap gap-x-5 gap-y-1 p-0 font-display text-sm text-muted">
                     <li>{legal.status.label}</li>
                     <li>
-                      <time dateTime={legal.event.date}>{formatDateLong(legal.event.date)}</time>
+                      <time dateTime={legal.event.date}>{formatDateLongUS(legal.event.date)}</time>
                     </li>
                     <li>
                       <Link href={`/controls/${legal.control.id}`} className="link-quiet">View clause</Link>
@@ -278,11 +352,9 @@ export default function Home() {
         <Container width="wide" className="py-14 sm:py-20">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.9fr)_minmax(0,1fr)] lg:gap-16">
             <div className="min-w-0">
-              <h2 id="method-heading" className="font-display text-base font-semibold">
-                How each analysis is built
-              </h2>
-              <ol className="m-0 mt-5 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2 xl:grid-cols-4">
-                {layers.map(([name, note], i) => (
+              <h2 id="method-heading" className="display-3 text-foreground">Method and evidence</h2>
+              <ol className="m-0 mt-6 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2 xl:grid-cols-4">
+                {framework.map(([name, note], i) => (
                   <li key={name} className="border-t border-border-strong pt-3">
                     <p className="font-display text-sm font-semibold">
                       <span aria-hidden className="tnum mr-2 text-accent">{i + 1}</span>
@@ -300,18 +372,12 @@ export default function Home() {
             </div>
 
             <div className="min-w-0 lg:border-l lg:border-border-strong lg:pl-12">
-              <h2 className="font-display text-base font-semibold">Research inquiries</h2>
+              <h2 className="display-3 text-foreground">Bring a question</h2>
               <p className="mt-4 font-display text-[0.9375rem] leading-7 text-muted">
-                For research collaboration or a commissioned analysis of critical-minerals policy or finance,
-                write to Benjamin Yang.
+                Every inquiry goes to the founder by email.
               </p>
               <p className="mt-5">
-                <a
-                  href="mailto:ben.yang@gwmail.gwu.edu?subject=Stratellar%20research%20inquiry"
-                  className="research-button-secondary"
-                >
-                  ben.yang@gwmail.gwu.edu
-                </a>
+                <Link href="/contact" className="research-button-secondary">Contact Stratellar</Link>
               </p>
             </div>
           </div>
