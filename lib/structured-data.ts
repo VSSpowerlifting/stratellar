@@ -1,6 +1,6 @@
 /**
- * schema.org JSON-LD, so the database is discoverable as a dataset rather than
- * as a pile of pages.
+ * schema.org JSON-LD, so the database is discoverable as a dataset and the
+ * company as one organization across pages.
  *
  * The modelling choice worth knowing: an event page is described as a
  * `Legislation`-typed `CreativeWork` whose `creator` is the *issuing
@@ -14,23 +14,43 @@ import { jurisdictionLabels } from "./labels";
 import type { PolicyEvent, Source } from "./types";
 import { getAllEvents, getAllJurisdictions, getAllMaterials } from "./data";
 
+/** One identifier for the company, so every page that describes it describes the same entity. */
+const ORG_ID = `${site.url}/#organization`;
+const WEBSITE_ID = `${site.url}/#website`;
+
 /** The company, as the publisher of a record or the creator of the dataset. */
 export function publisherJsonLd() {
-  return { "@type": "Organization", name: site.name, legalName: site.legalName, url: site.url };
+  return { "@type": "Organization", "@id": ORG_ID, name: site.name, legalName: site.legalName, url: site.url };
 }
 
 /**
- * The company on its own, for the About page. It states the name, the legal name, the founder and what the
- * company works on. It names no clients, staff, prices or regulated services, because none of those is claimed.
+ * The company on its own, for the About and Contact pages. It states the name, the legal name, the founder
+ * and what the company works on. Contact details, a location, a founding date, education, affiliations and
+ * offers are left out: the site publishes one contact address through `InquiryLink` and claims none of the rest.
  */
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     ...publisherJsonLd(),
-    slogan: site.descriptor,
+    slogan: site.tagline,
     description: site.description,
-    founder: { "@type": "Person", name: site.founder },
+    logo: `${site.url}/brand/icon-512.png`,
+    founder: { "@type": "Person", name: site.founder, jobTitle: "Founder & CEO", worksFor: { "@id": ORG_ID } },
+    sameAs: [site.repository],
     knowsAbout: ["export controls", "critical minerals", "industrial policy", "public financing", "strategic materials"],
+  };
+}
+
+/** The site as a whole, published by the company. */
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    name: site.name,
+    url: site.url,
+    publisher: { "@id": ORG_ID },
+    inLanguage: "en-US",
   };
 }
 
@@ -49,6 +69,7 @@ export function datasetJsonLd() {
     license: "https://creativecommons.org/licenses/by/4.0/",
     isAccessibleForFree: true,
     creator: publisherJsonLd(),
+    publisher: publisherJsonLd(),
     keywords: [
       "rare earth elements",
       "critical minerals",

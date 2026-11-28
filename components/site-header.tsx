@@ -106,12 +106,12 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-[2px]">
       <div ref={menuBox}>
         {/* One row, three columns: the name, the four destinations on the centre line, search and menu. */}
-        <Container width="wide" className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+        <Container width="wide" className="grid h-16 grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[auto_1fr_auto] md:gap-2 lg:grid-cols-[1fr_auto_1fr] lg:gap-4">
           <Link href="/" aria-label={`${site.name}, overview`} aria-current={pathname === "/" ? "page" : undefined} className="min-w-0 justify-self-start">
             <Wordmark markClassName="h-7 sm:h-8" />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-stretch self-stretch md:flex">
+          <nav aria-label="Main" className="hidden items-stretch justify-center self-stretch md:flex">
             {sections.map((item) => {
               const current = section === item.href;
               return (
@@ -120,8 +120,8 @@ export function SiteHeader() {
                   href={item.href}
                   aria-current={ariaCurrent(pathname, item.href, current)}
                   className={cn(
-                    "relative flex items-center px-4 font-display text-[0.9375rem] text-muted transition-colors hover:text-foreground lg:px-5",
-                    current && "text-foreground after:absolute after:inset-x-4 after:bottom-[-1px] after:h-px after:bg-foreground lg:after:inset-x-5",
+                    "relative flex items-center px-2 font-display text-[0.9375rem] text-muted transition-colors hover:text-foreground lg:px-5",
+                    current && "text-foreground after:absolute after:inset-x-2 after:bottom-[-1px] after:h-px after:bg-foreground lg:after:inset-x-5",
                   )}
                 >
                   {item.label}
@@ -149,17 +149,24 @@ export function SiteHeader() {
                   </Link>
                 );
               })}
-              <span aria-hidden className="mx-1.5 h-4 w-px bg-border-strong" />
+              <span aria-hidden className="mx-1.5 hidden h-4 w-px bg-border-strong lg:block" />
             </nav>
             <Link
               href="/search"
               aria-label={`Search ${site.name}`}
               aria-current={pathname === "/search" ? "page" : undefined}
-              className="inline-flex h-10 items-center gap-2 px-2.5 font-display text-sm text-muted transition-colors hover:text-foreground"
+              className="inline-flex h-11 min-w-11 items-center justify-center gap-2 px-2.5 font-display text-sm text-muted transition-colors hover:text-foreground md:h-10 md:min-w-0"
             >
               <SearchIcon />
               <span className="hidden lg:inline">Search</span>
               <kbd className="hidden border border-border px-1.5 font-mono text-[10px] leading-4 text-faint xl:inline">/</kbd>
+            </Link>
+            <Link
+              href="/contact"
+              aria-current={pathname === "/contact" ? "page" : undefined}
+              className="ml-0.5 hidden h-9 items-center border border-foreground px-3 font-display text-sm text-foreground transition-colors hover:bg-foreground hover:text-background aria-[current=page]:bg-foreground aria-[current=page]:text-background md:inline-flex lg:ml-1.5 lg:px-3.5"
+            >
+              Contact
             </Link>
             <button
               ref={menuToggle}
@@ -167,7 +174,7 @@ export function SiteHeader() {
               aria-expanded={menuOpen}
               aria-controls={menuId}
               onClick={() => setMenuOpen((o) => !o)}
-              className="inline-flex h-10 items-center gap-2 px-2.5 font-display text-sm text-foreground md:hidden"
+              className="inline-flex h-11 items-center gap-2 px-2.5 font-display text-sm text-foreground md:hidden"
             >
               <svg viewBox="0 0 16 16" aria-hidden className="h-4 w-4">
                 {menuOpen ? (
@@ -306,14 +313,14 @@ export function SiteHeader() {
                   Advisory
                 </Link>
               </li>
-              <li className="py-3.5">
-                <Link href="/about" onClick={closeMenu} aria-current={ariaCurrent(pathname, "/about", section === "/about")} className="block font-editorial text-xl text-foreground">
+              <li>
+                <Link href="/about" onClick={closeMenu} aria-current={ariaCurrent(pathname, "/about", section === "/about")} className="block py-3.5 font-editorial text-xl text-foreground">
                   About
                 </Link>
-                <ul className="mt-2 grid grid-cols-2 gap-x-4">
+                <ul className="grid grid-cols-2 gap-x-4 pb-2">
                   {(journeys.find((j) => j.href === EVIDENCE_JOURNEY_HREF)?.views ?? []).map((view) => (
                     <li key={view.href}>
-                      <Link href={view.href} onClick={closeMenu} aria-current={ariaCurrent(pathname, view.href, isActive(pathname, view.href))} className={cn("block py-2 font-display text-[0.9375rem] text-muted", isActive(pathname, view.href) && "text-foreground")}>
+                      <Link href={view.href} onClick={closeMenu} aria-current={ariaCurrent(pathname, view.href, isActive(pathname, view.href))} className={cn("block py-3 font-display text-[0.9375rem] text-muted", isActive(pathname, view.href) && "text-foreground")}>
                         {view.label}
                       </Link>
                     </li>
@@ -328,16 +335,16 @@ export function SiteHeader() {
             </ul>
             <p id={`${menuId}-tools`} className="mt-6 border-t border-border-strong pt-4 font-display text-xs text-muted">Tools</p>
             <ul aria-labelledby={`${menuId}-tools`} className="divide-y divide-border">
-              <li className="py-3.5">
-                <Link href="/explore" onClick={closeMenu} aria-current={ariaCurrent(pathname, "/explore", section === "/explore")} className="block font-editorial text-xl text-foreground">
+              <li>
+                <Link href="/explore" onClick={closeMenu} aria-current={ariaCurrent(pathname, "/explore", section === "/explore")} className="block py-3.5 font-editorial text-xl text-foreground">
                   Explore
                 </Link>
-                <ul className="mt-2 grid grid-cols-2 gap-x-4">
+                <ul className="grid grid-cols-2 gap-x-4 pb-2">
                   {exploreJourneys.map((j) => {
                     const current = isCurrent(pathname, headerNav[journeys.findIndex((x) => x.href === j.href)]);
                     return (
                       <li key={j.href}>
-                        <Link href={j.href} onClick={closeMenu} aria-current={ariaCurrent(pathname, j.href, current)} className={cn("block py-2 font-display text-[0.9375rem] text-muted", current && "text-foreground")}>
+                        <Link href={j.href} onClick={closeMenu} aria-current={ariaCurrent(pathname, j.href, current)} className={cn("block py-3 font-display text-[0.9375rem] text-muted", current && "text-foreground")}>
                           {j.label}
                         </Link>
                       </li>
@@ -352,8 +359,8 @@ export function SiteHeader() {
               </li>
             </ul>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border-strong pt-4 font-display text-sm">
-              <Link href="/search" onClick={closeMenu} className="text-muted hover:text-foreground">Search</Link>
-              <Link href="/saved" onClick={closeMenu} className="text-muted hover:text-foreground">Saved</Link>
+              <Link href="/search" onClick={closeMenu} className="inline-flex min-h-11 items-center text-muted hover:text-foreground">Search</Link>
+              <Link href="/saved" onClick={closeMenu} className="inline-flex min-h-11 items-center text-muted hover:text-foreground">Saved</Link>
               <RecordAsOf className="w-full" />
             </div>
           </Container>

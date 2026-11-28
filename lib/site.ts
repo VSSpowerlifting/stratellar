@@ -17,15 +17,15 @@ export const site = {
   founder: "Benjamin Yang",
   /** The one statement of what Stratellar is not. Render this sentence; do not reword it per page. */
   boundary:
-    "Stratellar is not a licensed or regulated adviser and provides no legal, investment, engineering, lobbying or transaction services.",
+    "Stratellar is not a licensed or regulated adviser and provides no legal, investment, engineering, lobbying, or transaction services.",
   /** Sits under or beside the name wherever the name appears without context (lockups, cards, titles). */
   descriptor: "Strategic Materials Intelligence",
   tagline: "Materials. Policy. Capital.",
   description:
-    "An independent strategic-materials intelligence and advisory firm: source-linked records, published research and scoped analysis of policy, capital and industrial execution.",
+    "An independent strategic-materials intelligence and advisory firm: source-linked records, published research, and scoped analysis of policy, capital, and industrial execution.",
   /** Describes the public record itself (dataset metadata), as distinct from the company. */
   recordDescription:
-    "Source-linked data on the policy, financing and industrial projects that shape strategic-material supply chains.",
+    "Source-linked data on the policy, financing, and industrial projects that shape strategic-material supply chains.",
   /**
    * The name the project published under until the Stratellar launch. Kept for
    * provenance only: releases issued before the change carry this imprint in
@@ -177,7 +177,7 @@ export const journeys = [
       { href: "/sources", label: "Sources" },
       { href: "/methodology", label: "Methodology" },
       { href: "/coverage", label: "Coverage" },
-      { href: "/data", label: "Data & API" },
+      { href: "/data", label: "Data and API" },
     ],
   },
 ] as const;
@@ -220,7 +220,7 @@ export const toolsNav = [
 export const contact = {
   email: "ben.yang@gwmail.gwu.edu",
   subjects: {
-    licence: "Stratellar licence inquiry",
+    licence: "Stratellar license inquiry",
     advisory: "Stratellar advisory brief",
     research: "Stratellar research and corrections",
   },
@@ -278,7 +278,7 @@ export const exploreJourneys = journeys.filter((j) => j.href !== EVIDENCE_JOURNE
 
 /**
  * Which header destination `pathname` belongs to (one of the four sections or one of the two tool
- * entries), or undefined on the overview. Contact sits under About.
+ * entries), or undefined on the overview. Contact has its own header button.
  */
 export const sectionFor = (
   pathname: string,
@@ -287,7 +287,7 @@ export const sectionFor = (
   if (isActivePath(pathname, "/research")) return "/research";
   if (isActivePath(pathname, "/advisory")) return "/advisory";
   if (isActivePath(pathname, "/markets")) return "/markets";
-  if (isActivePath(pathname, "/about") || isActivePath(pathname, "/contact")) return "/about";
+  if (isActivePath(pathname, "/about")) return "/about";
   const journey = journeyFor(pathname);
   if (journey) return journey.href === EVIDENCE_JOURNEY_HREF ? "/about" : "/explore";
   if (["/explore", "/search", "/saved"].some((h) => isActivePath(pathname, h))) return "/explore";

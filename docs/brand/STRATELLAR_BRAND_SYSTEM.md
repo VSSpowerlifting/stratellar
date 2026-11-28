@@ -112,7 +112,7 @@ Malachite stays the brand's one green. The rebrand adds a dark ground and four s
 
 Rules of use:
 
-1. The site is a light sheet. Seam is for covers, social artwork, document title pages and reversed lockups. It is not an interface theme.
+1. The site is a light sheet. Seam is for covers, social artwork, document title pages and reversed lockups. On the website it appears in three places only, all on the firm pages: the opening cover (`FirmCover`) on Intelligence and Advisory, the closing band (`CallBand`) on Intelligence, Advisory, and About, and the closing strata band on Contact. The homepage, About, and Contact open on the light sheet (the homepage with a centered title block, About and Contact with `FirmHead`). Data workspaces, record pages and research articles stay on the light sheet. Seam is not an interface theme.
 2. One green per composition carries meaning. On a light ground that is Malachite; on Seam it is Malachite Light.
 3. Status colours (Hematite, Ochre) keep the meanings the data pages already give them. They are never decoration.
 4. Chart series colours come from the categorical set in `docs/design/publication-tokens.json` and `components/markets/types.ts`. Brand colours do not replace them.

@@ -190,8 +190,8 @@ export default function DataPage() {
           Terms of use
         </h2>
         <p>
-          The public data is free to use under CC BY 4.0 with attribution, provided as-is; a written commercial
-          licence is a separate agreement, described under{" "}
+          The public data is free to use under CC BY 4.0 with attribution, including commercially, and is
+          provided as-is. A commercial license is a separate written agreement, described under{" "}
           <a href="/intelligence#licensing" className="link-quiet">Public and licensed use</a>. Categorical
           labels are research classifications grounded in the cited sources.
           Formal legal determinations require qualified legal assessment. Quotations are reproduced from the linked

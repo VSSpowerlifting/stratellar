@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Wordmark } from "@/components/ui/brand";
 import { site } from "@/lib/site";
-import { formatDateLong } from "@/lib/format";
+import { formatDateLongUS } from "@/lib/format";
 
 const footerColumns = [
   {
@@ -33,7 +33,7 @@ const footerColumns = [
       { href: "/methodology", label: "Methodology" },
       { href: "/sources", label: "Sources" },
       { href: "/coverage", label: "Coverage" },
-      { href: "/data", label: "Data & API" },
+      { href: "/data", label: "Data and API" },
     ],
   },
   {
@@ -63,10 +63,10 @@ export function SiteFooter() {
             {footerColumns.map((column) => (
               <div key={column.label}>
                 <p className="font-display text-xs text-faint">{column.label}</p>
-                <ul className="mt-3 space-y-2.5 font-display text-sm">
+                <ul className="mt-3 font-display text-sm md:space-y-2.5">
                   {column.links.map((item) => (
                     <li key={item.href}>
-                      <Link href={item.href} className="text-foreground hover:text-accent">
+                      <Link href={item.href} className="inline-flex min-h-11 items-center text-foreground hover:text-accent md:min-h-0">
                         {item.label}
                       </Link>
                     </li>
@@ -78,9 +78,10 @@ export function SiteFooter() {
         </div>
         <div className="mt-14 flex flex-col justify-between gap-2 border-t border-border pt-5 font-display text-xs leading-5 text-faint sm:flex-row">
           <p>
-            © {site.revisedOn.slice(0, 4)} {site.legalName}. Last revised <time dateTime={site.revisedOn}>{formatDateLong(site.revisedOn)}</time>. Coverage is selective.
+            © {site.revisedOn.slice(0, 4)} {site.legalName}. Last revised <time dateTime={site.revisedOn}>{formatDateLongUS(site.revisedOn)}</time>.{" "}
+            <Link href="/coverage" className="link-quiet">Coverage is selective</Link>.
           </p>
-          <p>Research and analysis, not legal or investment advice. Consult official sources and qualified advisers for legal decisions.</p>
+          <p className="max-w-xl sm:text-right">{site.boundary}</p>
         </div>
       </Container>
     </footer>

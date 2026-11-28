@@ -43,7 +43,7 @@ export function CapitalFlowExhibit({
       <CapitalFlowReplay timeline={timeline} headlines={headlines}>
         <figcaption className="title-block">
           <Heading id={titleId} className="display-3 text-foreground">
-            Paid, promised or conditional
+            Paid, promised, or conditional
           </Heading>
           <p className="mt-2 max-w-2xl text-pretty font-display text-sm leading-6 text-muted">
             <Link href={model.eventHref} className="link-quiet">

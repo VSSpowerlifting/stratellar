@@ -9,11 +9,14 @@ export function InquiryLink({
   kind,
   label,
   primary = false,
+  tone = "sheet",
   className,
 }: {
   kind: keyof typeof contact.subjects;
   label: string;
   primary?: boolean;
+  /** `seam` when the link sits on a Seam cover or call band, where the muted ink fails contrast. */
+  tone?: "sheet" | "seam";
   className?: string;
 }) {
   return (
@@ -21,7 +24,7 @@ export function InquiryLink({
       <a href={inquiryHref(kind)} className={primary ? "research-button" : "research-button-secondary"}>
         {label}
       </a>
-      <span className="select-all font-mono text-[0.8125rem] text-muted">{contact.email}</span>
+      <span className={cn("select-all font-mono text-[0.8125rem]", tone === "seam" ? "text-on-malachite" : "text-muted")}>{contact.email}</span>
     </p>
   );
 }
